@@ -1,0 +1,64 @@
+---
+- name: Install necessary packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - git
+    - imagemagick
+    - automake
+    - libtool
+    - libjpeg62-turbo-dev
+    - libexif-dev
+    - lftp
+
+- name: Clone necessary repos from github
+  git: 
+    repo: "{{ item }}"
+    dest: "{{ ansible_env.HOME}}/{{ item | regex_replace('^.*/', '') | regex_replace('\\.git$', '') }}"
+    force: yes
+  with_items:
+    - https://github.com/ljozsa/raspi-tools.git
+    - https://github.com/mattes/epeg.git
+
+- name: Build epeg
+  command: "{{ item }} chdir={{ ansible_env.HOME}}/epeg"
+  with_items:
+    - ./autogen.sh
+    - make
+    - make install
+    - ldconfig
+
+- name: Install necessary python modules via pip
+  command: pip install {{ item }}
+  with_items:
+    - requests
+    - pytz
+
+- name: copy camera unit file to a proper location
+  copy:
+    src: camera.service
+    dest: /etc/systemd/system/
+
+- name: ensure that camera is enabled by hardware
+  lineinfile:
+    dest: /boot/config.txt
+    regexp: ^{{ item }}
+    line: "{{ item }}"
+  with_items:
+    - start_x=1
+    - gpu_mem=128
+
+- name: reload systemd config, enable and start camera service
+  command: systemctl {{ item }}
+  with_items:
+    - daemon-reload
+    - enable camera
+    - start camera
+
+- name: copy crontab template to the place
+  template:
+    dest: /var/spool/cron/crontabs/root
+    src: crontab.tmpl

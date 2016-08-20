@@ -1,0 +1,5 @@
+---
+raspicam_ssh_login: ""
+raspicam_openshift_name: hangar-lkcm
+raspicam_ftp_filename: none
+raspicam_ftp_ip: 192.168.1.1
