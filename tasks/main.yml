@@ -1,4 +1,8 @@
 ---
+- name: Set hostname
+  hostname:
+    name: "{{ raspicam_ftp_filename }}"
+
 - name: Generate ssh-keys
   user:
     name: root
@@ -9,10 +13,6 @@
   authorized_key:
     user: root
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
-- name: Set hostname
-  hostname:
-    name: "{{ raspicam_ftp_filename }}"
 
 - name: Install necessary packages
   apt:
