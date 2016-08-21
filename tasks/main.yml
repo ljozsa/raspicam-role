@@ -1,7 +1,7 @@
 ---
 - name: Set hostname
   hostname:
-    name: "{{ raspicam_ftp_filename }}"
+    name: "cam-{{ raspicam_ftp_filename }}"
 
 - name: Generate ssh-keys
   user:
@@ -66,6 +66,9 @@
     - start_x=1
     - gpu_mem=128
 
+- name: set timezone
+  command: timedatectl set-timezone Europe/Prague
+
 - name: reload systemd config, enable and start camera service
   command: systemctl {{ item }}
   with_items:
@@ -77,3 +80,4 @@
   template:
     dest: /var/spool/cron/crontabs/root
     src: crontab.tmpl
+    mode: 0600
