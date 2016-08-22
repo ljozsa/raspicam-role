@@ -1,0 +1,10 @@
+[Unit]
+Description=raspi camera
+After=time-systemd-timesyncd.target
+
+[Service]
+ExecStartPre=/bin/mkdir -p {{ raspicam_default_dir }}
+ExecStart=/root/raspi-tools/script.py {{ raspicam_default_dir }}
+
+[Install]
+WantedBy=multi-user.target

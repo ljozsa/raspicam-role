@@ -1,7 +1,7 @@
 ---
 - name: Set hostname
   hostname:
-    name: "cam-{{ raspicam_ftp_filename }}"
+    name: "cam-{{ raspicam_name }}"
 
 - name: Generate ssh-keys
   user:
@@ -27,7 +27,6 @@
     - libtool
     - libjpeg62-turbo-dev
     - libexif-dev
-    - lftp
 
 - name: Clone necessary repos from github
   git: 
@@ -52,9 +51,9 @@
     - requests
     - pytz
 
-- name: copy camera unit file to a proper location
-  copy:
-    src: camera.service
+- name: copy camera unit file template to a proper location
+  template:
+    src: camera.service.tmpl
     dest: /etc/systemd/system/
 
 - name: ensure that camera is enabled by hardware
@@ -75,9 +74,3 @@
     - daemon-reload
     - enable camera
     - start camera
-
-- name: copy crontab template to the place
-  template:
-    dest: /var/spool/cron/crontabs/root
-    src: crontab.tmpl
-    mode: 0600

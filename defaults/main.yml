@@ -1,5 +1,3 @@
 ---
-raspicam_openshift_ssh_login: ""
-raspicam_openshift_name: hangar-lkcm
-raspicam_ftp_filename: none
-raspicam_ftp_ip: 192.168.1.1
+raspicam_name: default
+raspicam_default_dir: /run/cam/cam/

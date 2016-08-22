@@ -1,6 +1,0 @@
-* * * * * flock  -n lock_file -c "rsync -av /run/cam/cam/ {{ raspicam_openshift_ssh_login }}@{{ raspicam_openshift_name }}.rhcloud.com:~/app-root/data/{{ raspicam_ftp_filename }}/; rsync -av /run/cam/_sfpg_data/thumb/cam/ {{ raspicam_openshift_ssh_login }}@{{ raspicam_openshift_name }}.rhcloud.com:~/app-root/data/_sfpg_data/thumb/"
-* * * * * sleep 20 && lftp -c "open -u akmedlanky,cirous74 {{ raspicam_ftp_ip }}; put -O Letiste/Webkamera/ /run/{{ raspicam_ftp_filename }}.jpg"
-* * * * * find /run/cam/cam/ -mmin +15 -delete
-0 * * * * find /run/cam/_sfpg_data/thumb/cam -mmin +60 -delete
-* * * * * sleep 40 && killall -9 lftp
-*/5 * * * * ping -q -c1 {{ raspicam_ftp_ip }}  > /dev/null || reboot
